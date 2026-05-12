@@ -20,19 +20,16 @@ const Manager = () => {
   const [passwordArray, setPasswordArray] = useState([]);
 
 
-  const getPasswords = async() => {
-     let req = await fetch("http://localhost:3000/")
-      let passwords = await req.json()
+  const getPasswords = async () => {
+    let req = await fetch("https://password-manager-oxit.onrender.com/");
+    let passwords = await req.json();
 
-     console.log(passwords)
-      setPasswordArray(passwords);
-    
-  }
-  
+    console.log(passwords);
+    setPasswordArray(passwords);
+  };
 
   useEffect(() => {
-   getPasswords()
-   
+    getPasswords();
   }, []);
 
   const copyText = (text) => {
@@ -61,23 +58,30 @@ const Manager = () => {
   };
 
   const savePassword = async () => {
-    if(form.site.length > 3 && form.username.length >3 && form.Password.length > 3){
-
-       await fetch("http://localhost:3000/",{method:"DELETE", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({id:form.id})
-      })
+    if (
+      form.site.length > 3 &&
+      form.username.length > 3 &&
+      form.Password.length > 3
+    ) {
+      await fetch("https://password-manager-oxit.onrender.com/", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: form.id }),
+      });
 
       setPasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
-      await fetch("http://localhost:3000/",{method:"POST", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({...form,id:uuidv4()})
-      })
+      await fetch("https://password-manager-oxit.onrender.com/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, id: uuidv4() }),
+      });
       // localStorage.setItem(
       //   "passwords",
       //   JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]),
       // );
       // console.log([...passwordArray, form]);
       setform({ site: "", username: "", Password: "" });
-      
+
       toast("🦄 Password Saved", {
         position: "top-right",
         autoClose: 5000,
@@ -88,13 +92,12 @@ const Manager = () => {
         progress: undefined,
         theme: "light",
       });
-    }
-    else{
-      toast("Error : passsword not saved")
+    } else {
+      toast("Error : passsword not saved");
     }
   };
 
-  const deletePassword = async(id) => {
+  const deletePassword = async (id) => {
     console.log("passowrd deleted by uuidv", id);
     let c = confirm("Do you really want to delete this password");
     if (c) {
@@ -103,9 +106,11 @@ const Manager = () => {
       //   "passwords",
       //   JSON.stringify(passwordArray.filter((item) => item.id !== id)),
       // );
-       let res = await fetch("http://localhost:3000/",{method:"DELETE", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({id})
-      })
+      let res = await fetch("https://password-manager-oxit.onrender.com/", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
     }
     toast("☠️ Password Deleted", {
       position: "top-right",
